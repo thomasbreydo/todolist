@@ -1,6 +1,5 @@
 from flask import Markup
 from flask import flash, session
-import bcrypt
 
 
 def extract_email_and_password(request):
