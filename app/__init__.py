@@ -1,9 +1,9 @@
 from flask import Flask
 from flask import session, redirect, render_template, request
 from .utils import empty_input
-from .redirect import flash_account_exists_and_redirect_to
-from .redirect import flash_account_doesnt_exist_and_redirect_to
-from .redirect import flash_empty_input_and_redirect_to
+from .flash_and_redirect import flash_account_exists_and_redirect_to
+from .flash_and_redirect import flash_account_doesnt_exist_and_redirect_to
+from .flash_and_redirect import flash_empty_input_and_redirect_to
 from .database import get_user_row_from_email
 from .database import account_exists
 from .database import add_user

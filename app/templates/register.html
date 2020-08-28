@@ -7,6 +7,7 @@
     <title>Register</title>
 </head>
 <body>
+    <div class="header">
     <h1>Register</h1>
     {% with messages = get_flashed_messages() %}
     {% if messages %}
@@ -17,17 +18,31 @@
     {% endfor %}
     {% endif %}
     {% endwith %}
-    <form action="/register" method="POST">
-        <label for="name">Name: </label>
-        <input type="text" name="name" id="name" placeholder="John" />
-        <br />
-        <label for="email">Email: </label>
-        <input type="email" name="email" id="email" placeholder="john@example.com" />
-        <br />
-        <label for="password">Password: </label>
-        <input type="password" name="password" id="password" />
-        <br />
-        <input type="submit" value="Register">
-    </form>
+    </div>
+    <div class="main-content">
+    <div class="row">
+        <div class="column">
+            <form action="/register" method="POST">
+                <div class="row">
+                    <div class="column">
+                        <label for="name">Name: </label>
+                        <input type="text" name="name" id="name" placeholder="John" />
+                        <br />
+                        <label for="email">Email: </label>
+                        <input type="email" name="email" id="email" placeholder="john@example.com" />
+                        <label for="password">Password: </label>
+                        <input type="password" name="password" id="password" />
+                    </div>
+                    <div class="column">
+                        <input type="submit" value="Register">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="column"> 
+            <p>Have an account? Login <a href="/login">here</a>.</p>
+        </div>
+    </div>
+    </div>
 </body>
 </html>

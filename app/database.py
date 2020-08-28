@@ -6,7 +6,7 @@ from .state import get_current_user_id
 from .utils import asbytes
 
 
-DB = sqlite3.connect("database.db", check_same_thread=False)
+DB_CONNECTION = sqlite3.connect("database.db", check_same_thread=False)
 
 
 @contextmanager
@@ -20,7 +20,7 @@ def cursor(connection):
 
 
 def get_current_user_row():
-    with cursor(DB) as c:
+    with cursor(DB_CONNECTION) as c:
         c.execute("SELECT * FROM users WHERE id = ?", [get_current_user_id()])
         return c.fetchone()
 
@@ -31,7 +31,7 @@ def get_current_user_name():
 
 def add_user(name, email, password):
     hashed = bcrypt.hashpw(str.encode(password), bcrypt.gensalt())  # !
-    with cursor(DB) as c:
+    with cursor(DB_CONNECTION) as c:
         c.execute("INSERT INTO users (name, email, password) VALUES (?, ?, ?)", [
                   name, email, hashed])
 
@@ -42,7 +42,7 @@ def account_exists(email):
 
 
 def get_user_row_from_email(email):
-    c = DB.cursor()
+    c = DB_CONNECTION.cursor()
     c.execute("SELECT * FROM users WHERE email = ?", [email])
     row = c.fetchone()
     c.close()
@@ -58,4 +58,14 @@ def get_password_from_email(email):
 
 
 def check_password(email, password):
-    return bcrypt.checkpw(asbytes(password), get_password_from_email(email))
+    password_to_check = asbytes(password)
+    true_password = asbytes(get_password_from_email(email))
+    return bcrypt.checkpw(password_to_check, true_password)
+
+
+def reset_users():
+    with cursor(DB_CONNECTION) as c:
+        c.execute("DROP TABLE users")
+        c.execute(
+            "CREATE TABLE users(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, email "
+            "TEXT, password TEXT)")
