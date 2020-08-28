@@ -2,7 +2,9 @@ import sqlite3
 from contextlib import contextmanager
 from flask import session
 import bcrypt
-from .auth import get_current_user_id
+from .state import get_current_user_id
+from .utils import asbytes
+
 
 DB = sqlite3.connect("database.db", check_same_thread=False)
 
@@ -41,7 +43,7 @@ def account_exists(email):
 
 def get_user_row_from_email(email):
     c = DB.cursor()
-    c.execute("SELECT id FROM users WHERE email = ?", [email])
+    c.execute("SELECT * FROM users WHERE email = ?", [email])
     row = c.fetchone()
     c.close()
     return row
@@ -49,3 +51,11 @@ def get_user_row_from_email(email):
 
 def get_user_id_from_email(email):
     return get_user_row_from_email(email)[0]
+
+
+def get_password_from_email(email):
+    return get_user_row_from_email(email)[3]
+
+
+def check_password(email, password):
+    return bcrypt.checkpw(asbytes(password), get_password_from_email(email))

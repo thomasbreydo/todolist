@@ -1,19 +1,21 @@
 from flask import Flask
 from flask import session, redirect, render_template, request
-from .auth import extract_email_and_password
-from .auth import extract_name_email_and_password
-from .auth import empty_input
-from .auth import flash_account_exists_and_redirect_to
-from .auth import flash_account_doesnt_exist_and_redirect_to
-from .auth import logged_in
-from .auth import flash_empty_input_and_redirect_to
+from .utils import empty_input
+from .redirect import flash_account_exists_and_redirect_to
+from .redirect import flash_account_doesnt_exist_and_redirect_to
+from .redirect import flash_empty_input_and_redirect_to
 from .database import get_user_row_from_email
 from .database import account_exists
 from .database import add_user
 from .database import get_current_user_row
 from .database import get_current_user_name
 from .database import get_user_id_from_email
+from .database import check_password
+from .manage_requests import extract_email_and_password
+from .manage_requests import extract_name_email_and_password
 from .secrets import SECRET_KEY
+from .state import logged_in
+from .state import set_current_user_by_email
 
 app = Flask(__name__)
 app.secret_key = SECRET_KEY
@@ -41,7 +43,7 @@ def register():
     if account_exists(email):
         return flash_account_exists_and_redirect_to(register_page)
     add_user(name, email, password)
-    session["userId"] = get_user_id_from_email(email)
+    set_current_user_by_email(email)
     return index()
 
 
@@ -65,7 +67,10 @@ def login():
         return flash_empty_input_and_redirect_to(login_page)
     if not account_exists(email):
         return flash_account_doesnt_exist_and_redirect_to(login_page)
-    # check password
+    if check_password(email, password):
+        set_current_user_by_email(email)
+        return home_page()
+        # check password
 
 
 @app.route("/login", methods=["GET"])
