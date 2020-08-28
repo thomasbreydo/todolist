@@ -4,6 +4,7 @@ from .utils import empty_input
 from .flash_and_redirect import flash_account_exists_and_redirect_to
 from .flash_and_redirect import flash_account_doesnt_exist_and_redirect_to
 from .flash_and_redirect import flash_empty_input_and_redirect_to
+from .flash_and_redirect import flash_incorrect_password_and_redirect_to
 from .database import get_user_row_from_email
 from .database import account_exists
 from .database import add_user
@@ -70,7 +71,7 @@ def login():
     if check_password(email, password):
         set_current_user_by_email(email)
         return home_page()
-        # check password
+    return flash_incorrect_password_and_redirect_to(login_page)
 
 
 @app.route("/login", methods=["GET"])
