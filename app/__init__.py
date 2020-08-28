@@ -1,6 +1,7 @@
 from flask import Flask
 from flask import session, redirect, render_template, request
 from .utils import empty_input
+from .utils import ignore
 from .flash_and_redirect import flash_account_exists_and_redirect_to
 from .flash_and_redirect import flash_account_doesnt_exist_and_redirect_to
 from .flash_and_redirect import flash_empty_input_and_redirect_to
@@ -50,7 +51,8 @@ def register():
 
 @app.route("/logout", methods=["POST"])
 def logout():
-    del session["userId"]
+    with ignore(KeyError):
+        del session["userId"]
     return index()
 
 
