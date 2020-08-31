@@ -71,8 +71,8 @@ a:hover {
 .todolist-item {
   display: flex;
   flex-direction: row;
-  height: 2em;
-  line-height: 2em;
+  height: 2.5em;
+  line-height: 2.5em;
   align-items: center;
 }
 
@@ -81,5 +81,10 @@ a:hover {
 }
 
 .todo-action > input[type=submit] {
-  padding: 0.5em 0.7em;
+  height: 2.25em;
+  width: 3em;
+  text-align: center;
+  vertical-align: middle;
+  margin: 0 0.5em;
+  padding: 0;
 }

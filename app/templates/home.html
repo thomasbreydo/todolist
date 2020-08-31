@@ -24,13 +24,13 @@
         <span class="todos">
             {% for todoitem in todoitems %}
             <span class="todolist-item">
-                <form action="/toggle-done" method="POST" class="todo-action">
-                    <input type="text" value="{{ todoitem[0] }}" name="id" class="hidden">
-                    <input type="submit" value="☑️">
-                </form>
                 <form action="/delete" method="POST" class="todo-action">
                     <input type="text" value="{{ todoitem[0] }}" name="id" class="hidden">
                     <input type="submit" value="🗑">
+                </form>
+                <form action="/toggle-done" method="POST" class="todo-action">
+                    <input type="text" value="{{ todoitem[0] }}" name="id" class="hidden">
+                    <input type="submit" value="{{ '☑' if todoitem[2] else '☐'}}">
                 </form>
                 {% if todoitem[2] %}
                 <span class="done">
