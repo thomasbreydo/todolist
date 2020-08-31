@@ -9,8 +9,45 @@
 <body>
     <div class="header">
         <h1>Welcome, {{ name }}!</h1>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-warning">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
     </div>
     <div class="main-content">
+        <h2>Your To-dos</h2>
+        <span class="todos">
+            {% for todoitem in todoitems %}
+            <span class="todolist-item">
+                <form action="/toggle-done" method="POST" class="todo-action">
+                    <input type="text" value="{{ todoitem[0] }}" name="id" class="hidden">
+                    <input type="submit" value="☑️">
+                </form>
+                <form action="/delete" method="POST" class="todo-action">
+                    <input type="text" value="{{ todoitem[0] }}" name="id" class="hidden">
+                    <input type="submit" value="🗑">
+                </form>
+                {% if todoitem[2] %}
+                <span class="done">
+                {% endif %}
+                    <span class="todo-content">{{ todoitem[3] }}</span>
+                {% if todoitem[2] %}
+                </span>
+                {% endif %}
+            </span>
+            {% endfor %}
+        </span>
+        <form action="/new-todo" method="POST">
+            <label for="content"> New To-do: </label>
+            <input type="text" id="content" name="content">
+            <input type="submit" value="Create To-do">
+        </form>
+        <hr>
         <form action="/logout" method="POST">
             <input type="submit" value="Logout">
         </form>

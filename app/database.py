@@ -19,9 +19,20 @@ def cursor(connection):
         c.close()
 
 
+@contextmanager
+def isolation_level_none_cursor(connection):
+    old = connection.isolation_level
+    try:
+        connection.isolation_level = None
+        with cursor(connection) as c:
+            yield c
+    finally:
+        connection.isolation_level = old
+
+
 def get_current_user_row():
     with cursor(DB_CONNECTION) as c:
-        c.execute("SELECT * FROM users WHERE id = ?", [get_current_user_id()])
+        c.execute("SELECT * FROM users WHERE id = ?;", [get_current_user_id()])
         return c.fetchone()
 
 
@@ -32,7 +43,7 @@ def get_current_user_name():
 def add_user(name, email, password):
     hashed = bcrypt.hashpw(str.encode(password), bcrypt.gensalt())  # !
     with cursor(DB_CONNECTION) as c:
-        c.execute("INSERT INTO users (name, email, password) VALUES (?, ?, ?)", [
+        c.execute("INSERT INTO users (name, email, password) VALUES (?, ?, ?);", [
                   name, email, hashed])
 
 
@@ -43,7 +54,7 @@ def account_exists(email):
 
 def get_user_row_from_email(email):
     c = DB_CONNECTION.cursor()
-    c.execute("SELECT * FROM users WHERE email = ?", [email])
+    c.execute("SELECT * FROM users WHERE email = ?;", [email])
     row = c.fetchone()
     c.close()
     return row
@@ -64,8 +75,46 @@ def check_password(email, password):
 
 
 def reset_users():
+    with isolation_level_none_cursor(DB_CONNECTION) as c:
+        c.execute("DELETE FROM users;")
+        c.execute("VACUUM;")
+
+
+def reset_todos():
+    with isolation_level_none_cursor(DB_CONNECTION) as c:
+        c.execute("DELETE FROM todos;")
+        c.execute("VACUUM;")
+
+
+def reset_database():
+    reset_users()
+    reset_todos()
+
+
+def new_todo(content):
+    userId = get_current_user_id()
     with cursor(DB_CONNECTION) as c:
-        c.execute("DROP TABLE users")
-        c.execute(
-            "CREATE TABLE users(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, email "
-            "TEXT, password TEXT)")
+        c.execute("INSERT INTO todos (userId, done, content) VALUES (?, 0, ?);",
+                  [userId, content])
+
+
+def delete_todo(todoId):
+    with cursor(DB_CONNECTION) as c:
+        c.execute("DELETE FROM todos WHERE id = ?", [todoId])
+
+
+def mark_todo_done(todoId):
+    with cursor(DB_CONNECTION) as c:
+        c.execute("UPDATE todos SET done = 1 WHERE id = ?", [todoId])
+
+
+def toggle_todo(todoId):
+    with cursor(DB_CONNECTION) as c:
+        c.execute("UPDATE todos SET done = (1 - done) WHERE id = ?", [todoId])
+
+
+def get_todos():
+    userId = get_current_user_id()
+    with cursor(DB_CONNECTION) as c:
+        c.execute("SELECT * FROM todos WHERE userId = ?", [userId])
+        return c.fetchall()

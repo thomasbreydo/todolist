@@ -2,8 +2,8 @@ from flask import Markup
 from flask import flash
 
 
-def flash_empty_input_and_redirect_to(redirect_func):
-    flash("You must enter a username and password.")
+def flash_empty_input_and_redirect_to(message, redirect_func):
+    flash(message)
     return redirect_func()
 
 

@@ -1,62 +1,85 @@
 body {
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-    color: #0d0106;
-    margin: 1em 10em;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  color: #0d0106;
+  margin: 1em 10em;
 }
 
 .alert {
-    color: #f49e4c;
-    padding-bottom: 10px;
+  color: #f49e4c;
+  padding-bottom: 10px;
 }
 
 input[type="submit"] {
-    background-color: white;
-    border: 2px solid #64a6bd;
-    color: #64a6bd;
-    padding: 1em 1.5em;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
+  background-color: white;
+  border: 2px solid #64a6bd;
+  color: #64a6bd;
+  padding: 1em 1.5em;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
 }
 
 input[type="submit"]:hover {
-    cursor: pointer;
-    background-color: #64a6bd;
-    color: white;
-    transition-duration: 300ms;
-
+  cursor: pointer;
+  background-color: #64a6bd;
+  color: white;
+  transition-duration: 300ms;
 }
 
 .header {
-    text-align: center;
-    margin: 3px 0px; 
-    border-bottom: 1px solid #0d0106;
+  text-align: center;
+  margin: 3px 0px;
+  border-bottom: 1px solid #0d0106;
 }
 
 .main-content {
-    margin-top: 2em;
+  margin-top: 2em;
 }
 
 .column {
-    text-align: left;
-    float: left;
-    width: 50%;
+  text-align: left;
+  float: left;
+  width: 50%;
 }
 
 /* Clear floats after the columns */
 .row:after {
-content: "";
-display: table;
-clear: both;
+  content: "";
+  display: table;
+  clear: both;
 }
 
 a {
-    text-decoration: none;
-    font-weight: bold;
-    color: #64a6bd;
+  text-decoration: none;
+  font-weight: bold;
+  color: #64a6bd;
 }
 
 a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
+}
+
+.done {
+  text-decoration: line-through;
+}
+
+.hidden {
+  display: none;
+}
+
+.todolist-item {
+  display: flex;
+  flex-direction: row;
+  height: 2em;
+  line-height: 2em;
+  align-items: center;
+}
+
+.todo-content {
+  padding-left: 1em;
+}
+
+.todo-action > input[type=submit] {
+  padding: 0.5em 0.7em;
 }
