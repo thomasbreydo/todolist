@@ -4,9 +4,11 @@ from flask import session
 import bcrypt
 from .state import get_current_user_id
 from .utils import asbytes
+import os
 
-
-DB_CONNECTION = sqlite3.connect("database.db", check_same_thread=False)
+BASEPATH = os.path.dirname(__file__)
+DB_PATH = os.path.join(BASEPATH, "database.db")
+DB_CONNECTION = sqlite3.connect(DB_PATH, check_same_thread=False)
 
 
 @contextmanager
